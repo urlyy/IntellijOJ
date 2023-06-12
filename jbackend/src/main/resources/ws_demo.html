@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Client WebSocket</title>
+</head>
+<body>
+
+<div class="chat">
+  打开页面了
+</div>
+
+<script>
+  let clientWebSocket = new WebSocket("ws://localhost:8080/echo");
+
+  clientWebSocket.onopen = function () {
+    console.log("clientWebSocket.onopen", clientWebSocket);
+    console.log("clientWebSocket.readyState", "websocketstatus");
+    clientWebSocket.send("你好！");
+  }
+
+  clientWebSocket.onclose = function (error) {
+    console.log("clientWebSocket.onclose", clientWebSocket, error);
+    events("聊天会话关闭！");
+  }
+
+  console.log(clientWebSocket)
+
+  clientWebSocket.onmessage = function (events){
+    console.log(events)
+    document.querySelector(".chat").innerHTML += events.data + "<br>";
+  }
+</script>
+</body>
+</html>

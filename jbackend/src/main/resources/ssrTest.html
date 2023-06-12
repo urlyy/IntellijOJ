@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <button onclick="sendPushMessage()">发送</button>
+    <div id="msgs"></div>
+</body>
+<script>
+    const eventSource = new EventSource('http://localhost:8088/sse');
+
+    eventSource.onopen = function(event) {
+        console.log('SSE connection opened');
+    };
+
+    eventSource.onmessage = function(event) {
+        let eventData = event.data;
+        // const eventData = JSON.parse(event.data);
+        let div = document.createElement("div");
+        div.innerText = eventData;
+        document.getElementById("msgs").append(div);
+        // 在这里处理接收到的事件数据
+    };
+
+    eventSource.onerror = function(event) {
+        console.error('Error occurred in SSE connection');
+    };
+
+    eventSource.onclose = function(event) {
+        console.log('SSE connection closed');
+    };
+
+    // 模拟发送消息
+    function sendPushMessage() {
+        alert("qwerqwer")
+        const message = 'Hello SSE!';
+        fetch('http://localhost:8088/push', {
+            method: 'GET',
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Push message sent successfully');
+                } else {
+                    console.error('Failed to send push message');
+                }
+            })
+            .catch(error => {
+                console.error('Error occurred while sending push message:', error);
+            });
+    }
+
+</script>
+</html>
